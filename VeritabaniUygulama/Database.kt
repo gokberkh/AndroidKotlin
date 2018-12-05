@@ -19,6 +19,7 @@ class Database(var context:Context):SQLiteOpenHelper(context, DATABASE_NAME,null
 
     override fun onCreate(db: SQLiteDatabase?) {
 
+
         val createTable = "CREATE TABLE $TABLE_NAME ($COL_ID INTEGER PRIMARY KEY AUTOINCREMENT,$COL_NAME VARCHAR(256),$COL_AGE INTEGER)"
         db?.execSQL(createTable)
 
@@ -59,6 +60,33 @@ class Database(var context:Context):SQLiteOpenHelper(context, DATABASE_NAME,null
         result.close()
         db.close()
         return list
+    }
+
+    fun deleteData(){
+
+        val db=this.writableDatabase
+        db.delete(TABLE_NAME, null,null)
+        db.close()
+    }
+
+
+    fun updateData() {
+        val db = this.writableDatabase
+        val query = "Select * from " + TABLE_NAME
+        val result = db.rawQuery(query,null)
+        if(result.moveToFirst()){
+            do {
+                var cv = ContentValues()
+                cv.put(COL_AGE,(result.getInt(result.getColumnIndex(COL_AGE))+1))
+                db.update(TABLE_NAME,cv,COL_ID + "=? AND " + COL_NAME + "=?",
+                        arrayOf(result.getString(result.getColumnIndex(COL_ID)),
+                                result.getString(result.getColumnIndex(COL_NAME))))
+            }while (result.moveToNext())
+        }
+
+        result.close()
+        db.close()
+
     }
 
 }
