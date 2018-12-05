@@ -34,5 +34,17 @@ class MainActivity : AppCompatActivity() {
                 goster.append(data.get(i).id.toString()+ " "+data.get(i).name + " " + data.get(i).age +"\n" )
             }
         })
+
+        btn_guncelle.setOnClickListener({
+            db.updateData()
+            btn_oku.performClick()
+
+        })
+
+        btn_sil.setOnClickListener({
+            db.deleteData()
+            btn_oku.performClick()
+
+        })
     }
 }
